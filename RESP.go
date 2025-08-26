@@ -95,6 +95,12 @@ func (resp *RESP) decode(conn *net.TCPConn) string {
 		return resp.parseNull(conn)
 	case "#":
 		return resp.parseBoolean(conn)
+	case ",":
+		return resp.parseDoubles(conn)
+	case "(":
+		return resp.parseBigNumbers(conn)
+	case "!":
+		return resp.parseBulkError(conn)
 	default:
 		log.Fatal("Unknown error")
 	}
@@ -134,6 +140,18 @@ func (resp *RESP) parseBulkString(conn *net.TCPConn) string {
 }
 func (resp *RESP) parseBoolean(conn *net.TCPConn) string {
 	return readLine(conn)
+}
+
+func (resp *RESP) parseDoubles(conn *net.TCPConn) string {
+	return readLine(conn)
+}
+
+func (resp *RESP) parseBigNumbers(conn *net.TCPConn) string {
+	return readLine(conn)
+}
+
+func (resp *RESP) parseBulkError(conn *net.TCPConn) string {
+	return readBulkString(conn)
 }
 
 func (resp *RESP) parseNull(conn *net.TCPConn) string {
