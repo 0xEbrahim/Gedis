@@ -31,7 +31,7 @@ func (ch *CommandHandler) tokenizeArgs(args string) []string {
 func (ch *CommandHandler) buildRESP(tokens []string) string {
 	resp := "*" + strconv.Itoa(len(tokens)) + "\r\n"
 	for _, it := range tokens {
-		resp = resp + "$" + strconv.Itoa(len(tokens)) + it + "\r\n"
+		resp = resp + "$" + strconv.Itoa(len(it)) + "\r\n" + it + "\r\n"
 	}
 	return resp
 }

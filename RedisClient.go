@@ -8,7 +8,7 @@ import (
 type RedisClient struct {
 	host      *string
 	port      int
-	conn      net.Conn
+	conn      *net.TCPConn
 	connected bool
 }
 
@@ -16,6 +16,7 @@ func (rc *RedisClient) sendCommand(cmd string) bool {
 	if !rc.connected {
 		return false
 	}
+	
 	_, err := rc.conn.Write([]byte(cmd))
 	if err != nil {
 		return false
@@ -50,6 +51,6 @@ func (rc *RedisClient) disConnect() {
 	}
 }
 
-func (rc *RedisClient) getConnection() *net.Conn {
-	return &rc.conn
+func (rc *RedisClient) getConnection() *net.TCPConn {
+	return rc.conn
 }

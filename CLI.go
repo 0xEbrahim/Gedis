@@ -22,6 +22,7 @@ func (cli *CLI) Run() {
 		return
 	}
 	cmdHandler := initHandler()
+	responseHandler := initResponseHandler()
 	host := *cli.redisClient.host
 	port := cli.redisClient.port
 	println("Connected to Gedis server at", host, ":", port)
@@ -50,6 +51,8 @@ func (cli *CLI) Run() {
 			if !cli.redisClient.sendCommand(cmd) {
 				log.Fatal("Error: Failed to send command")
 			}
+			resp := responseHandler.parseResponse(cli.redisClient.getConnection())
+			println(resp)
 		} else {
 			return
 		}
