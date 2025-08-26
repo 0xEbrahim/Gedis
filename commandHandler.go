@@ -3,7 +3,6 @@ package main
 import (
 	"net"
 	"regexp"
-	"strconv"
 	"unicode/utf8"
 )
 
@@ -31,9 +30,5 @@ func (ch *CommandHandler) tokenizeArgs(args string) []string {
 }
 
 func (ch *CommandHandler) buildRESP(tokens []string) string {
-	resp := "*" + strconv.Itoa(len(tokens)) + "\r\n"
-	for _, it := range tokens {
-		resp = resp + "$" + strconv.Itoa(len(it)) + "\r\n" + it + "\r\n"
-	}
-	return resp
+	return ch.resp.encodeArray(tokens)
 }

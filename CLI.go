@@ -40,7 +40,7 @@ func (cli *CLI) Run() {
 				break
 			}
 			if line == "help" {
-				println("Help screen")
+				println("go run main.go -h <host> -p <port>")
 				continue
 			}
 			tokens := cmdHandler.tokenizeArgs(line)
