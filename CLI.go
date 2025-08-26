@@ -21,8 +21,8 @@ func (cli *CLI) Run() {
 	if !cli.redisClient.connect() {
 		return
 	}
-	cmdHandler := initHandler()
-	responseHandler := initResponseHandler()
+	cmdHandler := initHandler(cli.redisClient.getConnection())
+	responseHandler := initResponseHandler(cli.redisClient.getConnection())
 	host := *cli.redisClient.host
 	port := cli.redisClient.port
 	println("Connected to Gedis server at", host, ":", port)
