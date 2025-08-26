@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strings"
 )
@@ -45,8 +46,9 @@ func (cli *CLI) Run() {
 			if len(tokens) == 0 {
 				continue
 			}
-			for _, it := range tokens {
-				println(it)
+			cmd := cmdHandler.buildRESP(tokens)
+			if !cli.redisClient.sendCommand(cmd) {
+				log.Fatal("Error: Failed to send command")
 			}
 		} else {
 			return

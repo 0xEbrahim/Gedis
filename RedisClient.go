@@ -12,6 +12,17 @@ type RedisClient struct {
 	connected bool
 }
 
+func (rc *RedisClient) sendCommand(cmd string) bool {
+	if !rc.connected {
+		return false
+	}
+	_, err := rc.conn.Write([]byte(cmd))
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 func (rc *RedisClient) connect() bool {
 	IPs, _ := net.LookupIP(*rc.host)
 	for i := 0; i < len(IPs); i++ {

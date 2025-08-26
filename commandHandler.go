@@ -2,6 +2,7 @@ package main
 
 import (
 	"regexp"
+	"strconv"
 	"unicode/utf8"
 )
 
@@ -25,4 +26,12 @@ func (ch *CommandHandler) tokenizeArgs(args string) []string {
 		tokens = append(tokens, token)
 	}
 	return tokens
+}
+
+func (ch *CommandHandler) buildRESP(tokens []string) string {
+	resp := "*" + strconv.Itoa(len(tokens)) + "\r\n"
+	for _, it := range tokens {
+		resp = resp + "$" + strconv.Itoa(len(tokens)) + it + "\r\n"
+	}
+	return resp
 }
