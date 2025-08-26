@@ -68,7 +68,7 @@ OK
 
 | Feature / Behavior                     | Gedis | Official redis-cli |
 |---------------------------------------|---------------------------|------------------|
-| Basic commands (SET, GET, DEL, EXISTS)| ✅                        | ✅               |
+| commands (SET, GET, DEL, EXISTS, ...etc)| ✅                        | ✅               |
 | RESP2 protocol support                 | ✅                        | ✅               |
 | RESP3 protocol support                 | ✅ (partial / nested parsing) | ✅ (full)        |
 | Double values (`,`)                    | ✅                        | ✅               |
