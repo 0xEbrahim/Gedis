@@ -93,6 +93,8 @@ func (resp *RESP) decode(conn *net.TCPConn) string {
 		return resp.parseArray(conn)
 	case "_":
 		return resp.parseNull(conn)
+	case "#":
+		return resp.parseBoolean(conn)
 	default:
 		log.Fatal("Unknown error")
 	}
@@ -129,6 +131,9 @@ func (resp *RESP) parseArray(conn *net.TCPConn) string {
 
 func (resp *RESP) parseBulkString(conn *net.TCPConn) string {
 	return readBulkString(conn)
+}
+func (resp *RESP) parseBoolean(conn *net.TCPConn) string {
+	return readLine(conn)
 }
 
 func (resp *RESP) parseNull(conn *net.TCPConn) string {
