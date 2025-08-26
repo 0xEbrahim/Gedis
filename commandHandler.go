@@ -1,16 +1,18 @@
 package main
 
 import (
+	"net"
 	"regexp"
 	"strconv"
 	"unicode/utf8"
 )
 
 type CommandHandler struct {
+	resp *RESP
 }
 
-func initHandler() *CommandHandler {
-	return &CommandHandler{}
+func initHandler(conn *net.TCPConn) *CommandHandler {
+	return &CommandHandler{resp: &RESP{conn: conn}}
 }
 
 func (ch *CommandHandler) tokenizeArgs(args string) []string {

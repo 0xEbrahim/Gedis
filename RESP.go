@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net"
 	"strconv"
 )
@@ -42,4 +43,88 @@ func (resp *RESP) encodeInteger(n int) string {
 func (resp *RESP) encodeBulkString(str string) string {
 	encoded := BULK_STRING + strconv.Itoa(len(str)) + "\r\n" + str + "\r\n"
 	return encoded
+}
+
+func readByte(conn *net.TCPConn) string {
+	b := make([]byte, 1)
+	_, err := conn.Read(b)
+	prefix := string(b)
+	if err != nil {
+
+	}
+	return prefix
+}
+func readLine(conn *net.TCPConn) string {
+	line := ""
+	for {
+		c := readByte(conn)
+		if c == "\r" {
+			readByte(conn)
+			break
+		}
+		line = line + c
+	}
+	return line
+}
+
+func ReadLength(conn *net.TCPConn) int {
+	length := readLine(conn)
+	n, _ := strconv.Atoi(length)
+	return n
+}
+
+func readBulkString(conn *net.TCPConn) string {
+	ReadLength(conn)
+	return readLine(conn)
+}
+
+func (resp *RESP) decode(conn *net.TCPConn) string {
+	prefix := readByte(conn)
+	switch prefix {
+	case "+":
+		return resp.parseSimpleString(conn)
+	case "-":
+		return resp.parseSimpleError(conn)
+	case ":":
+		return resp.parseIntegers(conn)
+	case "$":
+		return resp.parseBulkString(conn)
+	case "*":
+		return resp.parseArray(conn)
+	default:
+		log.Fatal("Unknown error")
+	}
+	return ""
+}
+
+func readArray(conn *net.TCPConn) string {
+	str := ""
+	arrLen := ReadLength(conn)
+	for arrLen > 0 {
+		readByte(conn)
+		ReadLength(conn)
+		str = str + readLine(conn) + " "
+		arrLen = arrLen - 1
+	}
+	return str
+}
+
+func (resp *RESP) parseSimpleString(conn *net.TCPConn) string {
+	return readLine(conn)
+}
+
+func (resp *RESP) parseSimpleError(conn *net.TCPConn) string {
+	return readLine(conn)
+}
+
+func (resp *RESP) parseIntegers(conn *net.TCPConn) string {
+	return readLine(conn)
+}
+
+func (resp *RESP) parseArray(conn *net.TCPConn) string {
+	return readArray(conn)
+}
+
+func (resp *RESP) parseBulkString(conn *net.TCPConn) string {
+	return readBulkString(conn)
 }
