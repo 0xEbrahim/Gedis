@@ -31,7 +31,8 @@ func main() {
 				// Error
 			}
 		}
-
 		i++
 	}
+	cli := MakeCLI(&host, port)
+	cli.Run()
 }
