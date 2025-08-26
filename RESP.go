@@ -154,6 +154,7 @@ func (resp *RESP) parseBoolean(conn *net.TCPConn) string {
 }
 
 func (resp *RESP) parseDoubles(conn *net.TCPConn) string {
+
 	return readLine(conn)
 }
 
