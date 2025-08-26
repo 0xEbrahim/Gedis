@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -103,22 +105,24 @@ func (resp *RESP) decode(conn *net.TCPConn) string {
 		return resp.parseBulkError(conn)
 	case "=":
 		return resp.parseVerbatimStrings(conn)
+	case "%":
+		return resp.parseMap(conn)
 	default:
 		log.Fatal("Unknown error")
 	}
 	return ""
 }
 
-func readArray(conn *net.TCPConn) string {
-	str := ""
-	arrLen := ReadLength(conn)
-	for arrLen > 0 {
-		readByte(conn)
-		ReadLength(conn)
-		str = str + readLine(conn) + " "
-		arrLen = arrLen - 1
+func (resp *RESP) parseMap(conn *net.TCPConn) string {
+	n := ReadLength(conn)
+	parts := make([]string, 0, n)
+	for i := 0; i < n; i++ {
+		key := resp.decode(conn)
+		value := resp.decode(conn)
+
+		parts = append(parts, fmt.Sprintf("%s:%s", key, value))
 	}
-	return str
+	return "{" + strings.Join(parts, ", ") + "}"
 }
 
 func (resp *RESP) parseSimpleString(conn *net.TCPConn) string {
@@ -134,9 +138,14 @@ func (resp *RESP) parseIntegers(conn *net.TCPConn) string {
 }
 
 func (resp *RESP) parseArray(conn *net.TCPConn) string {
-	return readArray(conn)
+	n := ReadLength(conn)
+	elems := make([]string, 0, n)
+	for i := 0; i < n; i++ {
+		val := resp.decode(conn)
+		elems = append(elems, val)
+	}
+	return "[" + strings.Join(elems, ", ") + "]"
 }
-
 func (resp *RESP) parseBulkString(conn *net.TCPConn) string {
 	return readBulkString(conn)
 }
@@ -159,6 +168,7 @@ func (resp *RESP) parseBulkError(conn *net.TCPConn) string {
 func (resp *RESP) parseVerbatimStrings(conn *net.TCPConn) string {
 	return readBulkString(conn)
 }
+
 func (resp *RESP) parseNull(conn *net.TCPConn) string {
 	readByte(conn)
 	readLine(conn)
