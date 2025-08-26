@@ -101,6 +101,8 @@ func (resp *RESP) decode(conn *net.TCPConn) string {
 		return resp.parseBigNumbers(conn)
 	case "!":
 		return resp.parseBulkError(conn)
+	case "=":
+		return resp.parseVerbatimStrings(conn)
 	default:
 		log.Fatal("Unknown error")
 	}
@@ -154,6 +156,9 @@ func (resp *RESP) parseBulkError(conn *net.TCPConn) string {
 	return readBulkString(conn)
 }
 
+func (resp *RESP) parseVerbatimStrings(conn *net.TCPConn) string {
+	return readBulkString(conn)
+}
 func (resp *RESP) parseNull(conn *net.TCPConn) string {
 	readByte(conn)
 	readLine(conn)
