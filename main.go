@@ -35,4 +35,5 @@ func main() {
 	}
 	cli := MakeCLI(&host, port)
 	cli.Run()
+	defer cli.redisClient.disConnect()
 }

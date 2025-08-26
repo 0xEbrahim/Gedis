@@ -1,5 +1,11 @@
 package main
 
+import (
+	"bufio"
+	"os"
+	"strings"
+)
+
 type CLI struct {
 	redisClient *RedisClient
 }
@@ -14,5 +20,36 @@ func (cli *CLI) Run() {
 	if !cli.redisClient.connect() {
 		return
 	}
-	println("Connected to redis server")
+	cmdHandler := initHandler()
+	host := *cli.redisClient.host
+	port := cli.redisClient.port
+	println("Connected to Gedis server at", host, ":", port)
+	buf := bufio.NewScanner(os.Stdin)
+	for true {
+		print(host, ":", port, "> ")
+		if buf.Scan() {
+			line := buf.Text()
+			line = strings.TrimSpace(line)
+			if len(line) == 0 {
+				continue
+			}
+			if line == "exit" || line == "quit" {
+				println("Goodbye :(")
+				break
+			}
+			if line == "help" {
+				println("Help screen")
+				continue
+			}
+			tokens := cmdHandler.tokenizeArgs(line)
+			if len(tokens) == 0 {
+				continue
+			}
+			for _, it := range tokens {
+				println(it)
+			}
+		} else {
+			return
+		}
+	}
 }
