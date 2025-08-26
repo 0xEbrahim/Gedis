@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"strconv"
 )
@@ -16,7 +17,7 @@ func main() {
 				i += 1
 				host = args[i]
 			} else {
-				// Error
+				log.Fatal("you have to provide a host if you used -h")
 			}
 		}
 		if args[i] == "-p" {
@@ -24,11 +25,11 @@ func main() {
 				i += 1
 				port, err := strconv.Atoi(args[i])
 				if err != nil {
-					// Error
+
 				}
 				println(port)
 			} else {
-				// Error
+				log.Fatal("you have to provide a port if you used -p")
 			}
 		}
 		i++
