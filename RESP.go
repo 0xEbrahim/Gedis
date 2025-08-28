@@ -124,7 +124,7 @@ func (resp *RESP) parseMap(conn *net.TCPConn) string {
 
 		parts = append(parts, fmt.Sprintf("%s:%s", key, value))
 	}
-	return "{" + strings.Join(parts, ", ") + "}"
+	return "{" + strings.Join(parts, ", \r\n") + "}"
 }
 
 func (resp *RESP) parseSimpleString(conn *net.TCPConn) string {
