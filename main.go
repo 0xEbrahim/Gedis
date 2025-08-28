@@ -23,11 +23,7 @@ func main() {
 		if args[i] == "-p" {
 			if i+1 < len(args) {
 				i += 1
-				port, err := strconv.Atoi(args[i])
-				if err != nil {
-
-				}
-				println(port)
+				port, _ = strconv.Atoi(args[i])
 			} else {
 				log.Fatal("you have to provide a port if you used -p")
 			}
