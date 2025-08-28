@@ -60,6 +60,7 @@ func readLine(conn *net.TCPConn) string {
 	line := ""
 	for {
 		c := readByte(conn)
+
 		if c == "\r" {
 			readByte(conn)
 			break
@@ -82,6 +83,7 @@ func readBulkString(conn *net.TCPConn) string {
 
 func (resp *RESP) decode(conn *net.TCPConn) string {
 	prefix := readByte(conn)
+
 	switch prefix {
 	case "+":
 		return resp.parseSimpleString(conn)
@@ -171,7 +173,6 @@ func (resp *RESP) parseVerbatimStrings(conn *net.TCPConn) string {
 }
 
 func (resp *RESP) parseNull(conn *net.TCPConn) string {
-	readByte(conn)
 	readLine(conn)
 	return ""
 }

@@ -16,7 +16,6 @@ func (rc *RedisClient) sendCommand(cmd string) bool {
 	if !rc.connected {
 		return false
 	}
-	
 	_, err := rc.conn.Write([]byte(cmd))
 	if err != nil {
 		return false
@@ -33,7 +32,6 @@ func (rc *RedisClient) connect() bool {
 			rc.conn = conn
 			rc.connected = true
 			return true
-
 		}
 	}
 	return false

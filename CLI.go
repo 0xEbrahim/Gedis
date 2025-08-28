@@ -12,6 +12,7 @@ type CLI struct {
 }
 
 func MakeCLI(host *string, port int) *CLI {
+	println("PORT", port)
 	return &CLI{
 		redisClient: &RedisClient{host: host, port: port, conn: nil},
 	}
